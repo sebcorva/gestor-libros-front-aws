@@ -1,0 +1,84 @@
+<section class="container-xl py-4">
+  <div class="row g-4 justify-content-center">
+    <div class="col-12 col-md-7 col-lg-7">
+      <div class="tarjeta p-4 p-md-5">
+        <h1 class="h3 fw-bold mb-1">{{ editando() ? 'Editar reseña' : 'Publicar una reseña' }}</h1>
+        <p class="texto-suave mb-4">Cuéntale a la comunidad qué te pareció el libro.</p>
+
+        @if (error()) {
+          <div class="alert alert-danger py-2" role="alert">{{ error() }}</div>
+        }
+
+        @if (cargando()) {
+          <div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando…</span></div></div>
+        } @else {
+          <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+            <div class="row g-3">
+              <div class="col-12">
+                <label for="titulo" class="form-label">Título del libro</label>
+                <input id="titulo" class="form-control" formControlName="titulo" maxlength="100"
+                       [class.is-invalid]="invalido(form.controls.titulo, erroresServidor()['titulo'])" />
+                <app-error-campo [control]="form.controls.titulo" [servidor]="erroresServidor()['titulo']" />
+              </div>
+              <div class="col-12 col-sm-8">
+                <label for="autor" class="form-label">Autor del libro</label>
+                <input id="autor" class="form-control" formControlName="autor" maxlength="100"
+                       [class.is-invalid]="invalido(form.controls.autor, erroresServidor()['autor'])" />
+                <app-error-campo [control]="form.controls.autor" [servidor]="erroresServidor()['autor']" />
+              </div>
+              <div class="col-12 col-sm-4">
+                <label for="anio" class="form-label">Año de publicación</label>
+                <input id="anio" class="form-control" formControlName="anioPublicacionLibro" inputmode="numeric" maxlength="4"
+                       placeholder="1967"
+                       [class.is-invalid]="invalido(form.controls.anioPublicacionLibro, erroresServidor()['anioPublicacionLibro'])" />
+                <app-error-campo [control]="form.controls.anioPublicacionLibro" [servidor]="erroresServidor()['anioPublicacionLibro']"
+                                 mensajePatron="Ingresa un año de 1 a 4 dígitos" />
+              </div>
+              <div class="col-12">
+                <label for="genero" class="form-label">Género (categoría)</label>
+                <select id="genero" class="form-select" formControlName="genero"
+                        [class.is-invalid]="invalido(form.controls.genero, erroresServidor()['genero'])">
+                  <option value="" disabled>Elige un género…</option>
+                  @for (g of generos; track g.codigo) {
+                    <option [value]="g.codigo">{{ g.nombre }}</option>
+                  }
+                </select>
+                <app-error-campo [control]="form.controls.genero" [servidor]="erroresServidor()['genero']" />
+              </div>
+              <div class="col-12">
+                <label for="resena" class="form-label">Reseña</label>
+                <textarea id="resena" class="form-control" rows="7" formControlName="resena" [attr.maxlength]="maxResena"
+                          placeholder="¿De qué trata? ¿Por qué lo recomiendas?"
+                          [class.is-invalid]="invalido(form.controls.resena, erroresServidor()['resena'])"></textarea>
+                <app-error-campo [control]="form.controls.resena" [servidor]="erroresServidor()['resena']" />
+                <div class="form-text d-flex justify-content-between">
+                  <span>Entre {{ minResena }} y {{ maxResena }} caracteres.</span>
+                  <span [class.text-danger]="form.controls.resena.value.length < minResena">
+                    {{ form.controls.resena.value.length }}/{{ maxResena }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+              <a [routerLink]="editando() ? ['/publicaciones', id()] : ['/']" class="btn btn-outline-secondary px-4">Cancelar</a>
+              <button type="submit" class="btn btn-primary px-4" [disabled]="guardando()">
+                @if (guardando()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                {{ editando() ? 'Guardar cambios' : 'Publicar' }}
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+
+    <!-- Vista previa -->
+    <aside class="col-12 col-md-5 col-lg-4">
+      <div class="tarjeta p-3 p-md-4 sticky-md-top" style="top: 5.5rem">
+        <h2 class="titulo-seccion">Vista previa de la portada</h2>
+        <app-portada [titulo]="vista().titulo || 'Título del libro'" [autor]="vista().autor || 'Autor'" [genero]="vista().genero || ''" />
+        <p class="small texto-suave mt-3 mb-0">La portada se genera con el color del género elegido.</p>
+      </div>
+    </aside>
+  </div>
+</section>

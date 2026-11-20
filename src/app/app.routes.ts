@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { authGuard, invitadoGuard } from './core/guards';
+import { authGuard, invitadoGuard, publicarGuard } from './core/guards';
 
 // MVC - Controlador: decide que vista se muestra segun la URL (protegida por guards)
 export const routes: Routes = [
@@ -11,6 +11,15 @@ export const routes: Routes = [
   {
     path: 'categoria/:genero', title: 'Categoría · Libros y Letras',
     loadComponent: () => import('./pages/foro/categoria/categoria.component').then(m => m.CategoriaComponent),
+  },
+  // 'publicaciones/nueva' va antes que 'publicaciones/:id' para que "nueva" no se tome como id
+  {
+    path: 'publicaciones/nueva', title: 'Publicar reseña · Libros y Letras', canActivate: [publicarGuard],
+    loadComponent: () => import('./pages/foro/publicacion-form/publicacion-form.component').then(m => m.PublicacionFormComponent),
+  },
+  {
+    path: 'publicaciones/:id/editar', title: 'Editar reseña · Libros y Letras', canActivate: [authGuard],
+    loadComponent: () => import('./pages/foro/publicacion-form/publicacion-form.component').then(m => m.PublicacionFormComponent),
   },
   {
     path: 'publicaciones/:id', title: 'Reseña · Libros y Letras',
