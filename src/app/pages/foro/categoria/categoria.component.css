@@ -1,0 +1,14 @@
+.icono-genero {
+  width: 3.25rem;
+  height: 3.25rem;
+}
+
+.filtro {
+  width: 100%;
+}
+
+@media (min-width: 576px) {
+  .filtro {
+    width: 15rem;
+  }
+}

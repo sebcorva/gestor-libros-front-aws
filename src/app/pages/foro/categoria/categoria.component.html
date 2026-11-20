@@ -1,0 +1,65 @@
+<section class="container-xl py-4">
+  @if (info(); as g) {
+    <div class="row g-4">
+      <div class="col-12 col-md-8">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb small mb-2">
+            <li class="breadcrumb-item"><a routerLink="/">Foro</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ g.nombre }}</li>
+          </ol>
+        </nav>
+
+        <div class="tarjeta p-3 p-md-4 mb-4 d-flex flex-wrap align-items-center gap-3">
+          <span class="icono-genero rounded-3 d-inline-flex align-items-center justify-content-center text-white"
+                [style.background]="g.color"><i class="bi {{ g.icono }} fs-3"></i></span>
+          <div class="me-auto">
+            <h1 class="h4 fw-bold mb-0">{{ g.nombre }}</h1>
+            <span class="texto-suave small">{{ delGenero().length }} {{ delGenero().length === 1 ? 'reseña' : 'reseñas' }}</span>
+          </div>
+          <div class="filtro">
+            <label for="filtro" class="visually-hidden">Filtrar por título o autor</label>
+            <input id="filtro" type="search" class="form-control form-control-sm" placeholder="Filtrar por título o autor"
+                   [ngModel]="filtro()" (ngModelChange)="filtro.set($event)" maxlength="100" />
+          </div>
+        </div>
+
+        @if (cargando()) {
+          <div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando…</span></div></div>
+        } @else if (error()) {
+          <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+            <span class="me-auto">{{ error() }}</span>
+            <button class="btn btn-sm btn-outline-danger" type="button" (click)="cargar()">Reintentar</button>
+          </div>
+        } @else {
+          <div class="d-flex flex-column gap-4">
+            @for (p of visibles(); track p.idPublicacion) {
+              <app-publicacion-card [publicacion]="p" />
+            } @empty {
+              <div class="tarjeta p-5 text-center">
+                <i class="bi bi-inbox display-5 texto-suave"></i>
+                <p class="mt-3 mb-0">
+                  @if (filtro()) { Ninguna reseña de {{ g.nombre }} coincide con “{{ filtro() }}”. }
+                  @else { Aún no hay reseñas de {{ g.nombre }}. }
+                </p>
+              </div>
+            }
+          </div>
+        }
+      </div>
+      <aside class="col-12 col-md-4">
+        <app-sidebar-foro />
+      </aside>
+    </div>
+  } @else {
+    <div class="tarjeta p-5 text-center">
+      <i class="bi bi-question-circle display-5 texto-suave"></i>
+      <h1 class="h4 fw-bold mt-3">Esa categoría no existe</h1>
+      <p class="texto-suave">Elige una de las categorías del foro:</p>
+      <div class="d-flex flex-wrap justify-content-center gap-2">
+        @for (g of generos; track g.codigo) {
+          <a class="chip" [routerLink]="['/categoria', g.codigo]"><i class="bi {{ g.icono }}"></i>{{ g.nombre }}</a>
+        }
+      </div>
+    </div>
+  }
+</section>

@@ -33,3 +33,11 @@ export class StorageMemoria implements Storage {
   removeItem(clave: string): void { this.datos.delete(clave); }
   setItem(clave: string, valor: string): void { this.datos.set(clave, valor); }
 }
+
+export function publicacionPrueba(cambios: Partial<import('../models/publicacion').Publicacion> = {}) {
+  return {
+    idPublicacion: 1, titulo: 'Cien años de soledad', autor: 'Gabriel García Márquez', anioPublicacionLibro: '1967',
+    genero: 'FICCION' as const, resena: 'Una saga familiar increíble que mezcla lo cotidiano con lo mágico en Macondo.',
+    fechaPublicacion: '2026-11-20T10:00:00', usuarioId: 7, usuarioNombre: 'Elena', ...cambios,
+  };
+}
