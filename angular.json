@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "pet-app-angular21": {
+    "gestor-libros-front": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -25,6 +25,8 @@
               }
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.min.css",
               "src/styles.css"
             ],
             "server": "src/main.server.ts",
@@ -34,14 +36,17 @@
             },
             "ssr": {
               "entry": "src/server.ts"
-            }
+            },
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
+                  "maximumWarning": "800kB",
                   "maximumError": "1MB"
                 },
                 {
@@ -67,10 +72,10 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "pet-app-angular21:build:production"
+              "buildTarget": "gestor-libros-front:build:production"
             },
             "development": {
-              "buildTarget": "pet-app-angular21:build:development"
+              "buildTarget": "gestor-libros-front:build:development"
             }
           },
           "defaultConfiguration": "development"

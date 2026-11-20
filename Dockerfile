@@ -12,7 +12,7 @@ FROM node:22-alpine
 
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=build /app/dist/pet-app-angular21 ./dist/pet-app-angular21
+COPY --from=build /app/dist/gestor-libros-front ./dist/gestor-libros-front
 COPY --from=build /app/package.json /app/package-lock.json ./
 RUN npm ci --omit=dev
 
@@ -20,4 +20,4 @@ USER node
 ENV PORT=4000
 EXPOSE 4000
 
-CMD ["node", "dist/pet-app-angular21/server/server.mjs"]
+CMD ["node", "dist/gestor-libros-front/server/server.mjs"]
