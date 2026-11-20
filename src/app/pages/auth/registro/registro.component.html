@@ -1,0 +1,70 @@
+<section class="container pagina-formulario">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-7 col-xl-6">
+      <div class="tarjeta p-4 p-md-5">
+        <h1 class="h3 fw-bold mb-1">Crea tu cuenta</h1>
+        <p class="texto-suave mb-4">Únete a la comunidad para comentar reseñas. Con premium también puedes publicar.</p>
+
+        @if (error()) {
+          <div class="alert alert-danger py-2" role="alert">{{ error() }}</div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="registrar()" novalidate>
+          <div class="row g-3">
+            <div class="col-12 col-sm-6">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input id="nombre" class="form-control" formControlName="nombre" autocomplete="given-name"
+                     [class.is-invalid]="invalido(form.controls.nombre, erroresServidor()['nombre'])" />
+              <app-error-campo [control]="form.controls.nombre" [servidor]="erroresServidor()['nombre']" />
+            </div>
+            <div class="col-12 col-sm-6">
+              <label for="apellido" class="form-label">Apellido</label>
+              <input id="apellido" class="form-control" formControlName="apellido" autocomplete="family-name"
+                     [class.is-invalid]="invalido(form.controls.apellido, erroresServidor()['apellido'])" />
+              <app-error-campo [control]="form.controls.apellido" [servidor]="erroresServidor()['apellido']" />
+            </div>
+            <div class="col-12">
+              <label for="email" class="form-label">Email</label>
+              <input id="email" type="email" class="form-control" formControlName="email" autocomplete="email"
+                     [class.is-invalid]="invalido(form.controls.email, erroresServidor()['email'])" />
+              <app-error-campo [control]="form.controls.email" [servidor]="erroresServidor()['email']" />
+            </div>
+            <div class="col-12 col-sm-6">
+              <label for="password" class="form-label">Contraseña</label>
+              <input id="password" type="password" class="form-control" formControlName="password"
+                     autocomplete="new-password" aria-describedby="reglas-password"
+                     [class.is-invalid]="invalido(form.controls.password, erroresServidor()['password'])" />
+              <app-error-campo [control]="form.controls.password" [servidor]="erroresServidor()['password']" />
+            </div>
+            <div class="col-12 col-sm-6">
+              <label for="confirmar" class="form-label">Confirmar contraseña</label>
+              <input id="confirmar" type="password" class="form-control" formControlName="confirmar"
+                     autocomplete="new-password" [class.is-invalid]="invalido(form.controls.confirmar)" />
+              <app-error-campo [control]="form.controls.confirmar" />
+            </div>
+            <div class="col-12" id="reglas-password">
+              <app-password-checklist [valor]="form.controls.password.value" />
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input id="terminos" type="checkbox" class="form-check-input" formControlName="terminos"
+                       [class.is-invalid]="invalido(form.controls.terminos)" />
+                <label for="terminos" class="form-check-label">Acepto las normas de convivencia del foro</label>
+                @if (invalido(form.controls.terminos)) {
+                  <div class="invalid-feedback d-block">Debes aceptar las normas para registrarte</div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2 mt-4" [disabled]="enviando()">
+            @if (enviando()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+            Crear cuenta
+          </button>
+        </form>
+
+        <p class="text-center mt-4 mb-0">¿Ya tienes cuenta? <a routerLink="/login" class="fw-semibold">Inicia sesión</a></p>
+      </div>
+    </div>
+  </div>
+</section>
