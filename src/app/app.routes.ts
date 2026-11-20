@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { authGuard, invitadoGuard, publicarGuard } from './core/guards';
+import { adminGuard, authGuard, invitadoGuard, publicarGuard } from './core/guards';
 
 // MVC - Controlador: decide que vista se muestra segun la URL (protegida por guards)
 export const routes: Routes = [
@@ -44,6 +44,23 @@ export const routes: Routes = [
   {
     path: 'premium', title: 'Hazte premium · Libros y Letras', canActivate: [authGuard],
     loadComponent: () => import('./pages/perfil/premium/premium.component').then(m => m.PremiumComponent),
+  },
+  {
+    path: 'admin/usuarios', canActivate: [adminGuard],
+    children: [
+      {
+        path: '', title: 'Administrar usuarios · Libros y Letras',
+        loadComponent: () => import('./pages/admin/usuarios-lista/usuarios-lista.component').then(m => m.UsuariosListaComponent),
+      },
+      {
+        path: 'nuevo', title: 'Nuevo usuario · Libros y Letras',
+        loadComponent: () => import('./pages/admin/usuario-form/usuario-form.component').then(m => m.UsuarioFormComponent),
+      },
+      {
+        path: ':id/editar', title: 'Editar usuario · Libros y Letras',
+        loadComponent: () => import('./pages/admin/usuario-form/usuario-form.component').then(m => m.UsuarioFormComponent),
+      },
+    ],
   },
   { path: '**', redirectTo: '' },
 ];

@@ -1,0 +1,80 @@
+<section class="container pagina-formulario">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-7">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small mb-2">
+          <li class="breadcrumb-item"><a routerLink="/admin/usuarios">Usuarios</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ editando() ? 'Editar' : 'Nuevo' }}</li>
+        </ol>
+      </nav>
+      <div class="tarjeta p-4 p-md-5">
+        <h1 class="h3 fw-bold mb-4">{{ editando() ? 'Editar usuario' : 'Nuevo usuario' }}</h1>
+
+        @if (error()) {
+          <div class="alert alert-danger py-2" role="alert">{{ error() }}</div>
+        }
+
+        @if (cargando()) {
+          <div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando…</span></div></div>
+        } @else {
+          <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+            <div class="row g-3">
+              <div class="col-12 col-sm-6">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input id="nombre" class="form-control" formControlName="nombre"
+                       [class.is-invalid]="invalido(form.controls.nombre, erroresServidor()['nombre'])" />
+                <app-error-campo [control]="form.controls.nombre" [servidor]="erroresServidor()['nombre']" />
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input id="apellido" class="form-control" formControlName="apellido"
+                       [class.is-invalid]="invalido(form.controls.apellido, erroresServidor()['apellido'])" />
+                <app-error-campo [control]="form.controls.apellido" [servidor]="erroresServidor()['apellido']" />
+              </div>
+              <div class="col-12 col-sm-8">
+                <label for="email" class="form-label">Email</label>
+                <input id="email" type="email" class="form-control" formControlName="email"
+                       [class.is-invalid]="invalido(form.controls.email, erroresServidor()['email'])" />
+                <app-error-campo [control]="form.controls.email" [servidor]="erroresServidor()['email']" />
+              </div>
+              <div class="col-12 col-sm-4">
+                <label for="rol" class="form-label">Rol</label>
+                <select id="rol" class="form-select" formControlName="rol">
+                  <option value="USUARIO">Lector</option>
+                  <option value="ADMIN">Administrador</option>
+                </select>
+                @if (esYo()) { <div class="form-text">No puedes cambiar tu propio rol.</div> }
+              </div>
+
+              <div class="col-12"><hr class="my-1" /></div>
+              <div class="col-12 col-sm-6">
+                <label for="password" class="form-label">{{ editando() ? 'Nueva contraseña (opcional)' : 'Contraseña' }}</label>
+                <input id="password" type="password" class="form-control" formControlName="password" autocomplete="new-password"
+                       [class.is-invalid]="invalido(form.controls.password, erroresServidor()['password'])" />
+                <app-error-campo [control]="form.controls.password" [servidor]="erroresServidor()['password']" />
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="confirmar" class="form-label">Confirmar contraseña</label>
+                <input id="confirmar" type="password" class="form-control" formControlName="confirmar" autocomplete="new-password"
+                       [class.is-invalid]="invalido(form.controls.confirmar)" />
+                <app-error-campo [control]="form.controls.confirmar" />
+              </div>
+              <div class="col-12">
+                @if (editando()) { <div class="form-text">Déjala vacía para conservar la contraseña actual.</div> }
+                <app-password-checklist [valor]="form.controls.password.value" />
+              </div>
+            </div>
+
+            <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+              <a routerLink="/admin/usuarios" class="btn btn-outline-secondary px-4">Cancelar</a>
+              <button type="submit" class="btn btn-primary px-4" [disabled]="guardando()">
+                @if (guardando()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                {{ editando() ? 'Guardar cambios' : 'Crear usuario' }}
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+</section>
