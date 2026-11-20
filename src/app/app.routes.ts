@@ -13,6 +13,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/foro/categoria/categoria.component').then(m => m.CategoriaComponent),
   },
   {
+    path: 'publicaciones/:id', title: 'Reseña · Libros y Letras',
+    loadComponent: () => import('./pages/foro/publicacion-detalle/publicacion-detalle.component').then(m => m.PublicacionDetalleComponent),
+  },
+  {
     path: 'login', title: 'Iniciar sesión · Libros y Letras', canActivate: [invitadoGuard],
     loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent),
   },

@@ -1,0 +1,144 @@
+<section class="container-xl py-4">
+  <div class="row g-4">
+    <div class="col-12 col-md-8">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small mb-2">
+          <li class="breadcrumb-item"><a routerLink="/">Foro</a></li>
+          @if (genero(); as g) {
+            <li class="breadcrumb-item"><a [routerLink]="['/categoria', g.codigo]">{{ g.nombre }}</a></li>
+          }
+          <li class="breadcrumb-item active" aria-current="page">Reseña</li>
+        </ol>
+      </nav>
+
+      @if (cargando()) {
+        <div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando…</span></div></div>
+      } @else if (error()) {
+        <div class="tarjeta p-5 text-center">
+          <i class="bi bi-journal-x display-5 texto-suave"></i>
+          <p class="mt-3">{{ error() }}</p>
+          <a routerLink="/" class="btn btn-primary">Volver al foro</a>
+        </div>
+      } @else if (publicacion(); as p) {
+        @if (editada()) {
+          <div class="alert alert-success py-2" role="status">Reseña guardada.</div>
+        }
+        @if (errorAccion()) {
+          <div class="alert alert-danger py-2" role="alert">{{ errorAccion() }}</div>
+        }
+
+        <article class="tarjeta p-3 p-md-4">
+          <div class="d-flex align-items-start gap-2 mb-3">
+            <h1 class="h4 fw-bold mb-0 me-auto">Descubriendo “{{ p.titulo }}” de {{ p.autor }}</h1>
+            @if (esAutor() || puedeEliminar()) {
+              <div class="dropdown">
+                <button class="btn btn-sm btn-link text-secondary" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" aria-label="Opciones de la reseña">
+                  <i class="bi bi-three-dots fs-5"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  @if (esAutor()) {
+                    <li><a class="dropdown-item" [routerLink]="['/publicaciones', p.idPublicacion, 'editar']"><i class="bi bi-pencil me-2"></i>Editar</a></li>
+                  }
+                  @if (puedeEliminar()) {
+                    <li>
+                      <button class="dropdown-item text-danger" type="button" (click)="porEliminar.set({ tipo: 'publicacion' })">
+                        <i class="bi bi-trash me-2"></i>Eliminar{{ esAutor() ? '' : ' (moderación)' }}
+                      </button>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <app-avatar [nombre]="p.usuarioNombre" [tamano]="40" />
+            <div class="lh-sm">
+              <div class="fw-semibold">{{ p.usuarioNombre }}</div>
+              <small class="texto-suave" [title]="p.fechaPublicacion | date: 'medium'">{{ p.fechaPublicacion | tiempoRelativo }}</small>
+            </div>
+          </div>
+
+          <p class="resena">{{ p.resena }}</p>
+
+          <app-portada class="d-block mb-3" [titulo]="p.titulo" [autor]="p.autor" [genero]="p.genero" />
+
+          <div class="d-flex flex-wrap align-items-center gap-2 small">
+            @if (genero(); as g) {
+              <a [routerLink]="['/categoria', g.codigo]" class="badge rounded-pill text-bg-light border text-decoration-none">
+                <i class="bi {{ g.icono }} me-1"></i>{{ g.nombre }}
+              </a>
+            }
+            <span class="texto-suave"><i class="bi bi-calendar3 me-1"></i>Libro de {{ p.anioPublicacionLibro }}</span>
+            <span class="ms-auto texto-suave">{{ comentarios().length }} {{ comentarios().length === 1 ? 'comentario' : 'comentarios' }}</span>
+          </div>
+
+          <hr />
+
+          <!-- Comentarios -->
+          <h2 class="h6 fw-bold mb-3">Comentarios</h2>
+          <ul class="list-unstyled mb-4">
+            @for (c of comentarios(); track c.idComentario) {
+              <li class="d-flex gap-2 mb-3">
+                <app-avatar [nombre]="c.usuarioNombre" [tamano]="32" />
+                <div class="flex-grow-1 bg-light rounded-3 px-3 py-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <strong class="small">{{ c.usuarioNombre }}</strong>
+                    <small class="texto-suave">{{ c.fecha | tiempoRelativo }}</small>
+                    @if (puedeEliminarComentario(c)) {
+                      <button class="btn btn-sm btn-link text-danger ms-auto p-0" type="button"
+                              (click)="porEliminar.set({ tipo: 'comentario', comentario: c })" aria-label="Eliminar comentario">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    }
+                  </div>
+                  <p class="mb-0 small comentario">{{ c.contenido }}</p>
+                </div>
+              </li>
+            } @empty {
+              <li class="texto-suave small">Aún no hay comentarios. ¡Comenta primero!</li>
+            }
+          </ul>
+
+          @if (auth.autenticado()) {
+            <form [formGroup]="formComentario" (ngSubmit)="comentar()" novalidate class="d-flex gap-2 align-items-start">
+              <app-avatar [nombre]="(auth.usuario()?.nombre ?? '') + ' ' + (auth.usuario()?.apellido ?? '')" [tamano]="32" />
+              <div class="flex-grow-1">
+                <label for="contenido" class="visually-hidden">Escribe un comentario</label>
+                <textarea id="contenido" class="form-control" rows="2" formControlName="contenido"
+                          placeholder="Escribe un comentario…" [attr.maxlength]="maxComentario"
+                          [class.is-invalid]="invalido(formComentario.controls.contenido)"></textarea>
+                <app-error-campo [control]="formComentario.controls.contenido" />
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                  <small class="texto-suave">{{ formComentario.controls.contenido.value.length }}/{{ maxComentario }}</small>
+                  <button type="submit" class="btn btn-primary btn-sm px-3" [disabled]="comentando()">
+                    @if (comentando()) { <span class="spinner-border spinner-border-sm me-1"></span> }
+                    Comentar
+                  </button>
+                </div>
+              </div>
+            </form>
+          } @else {
+            <div class="alert alert-light border small mb-0">
+              <a routerLink="/login" [queryParams]="{ returnUrl: urlActual() }" class="fw-semibold">Inicia sesión</a> o
+              <a routerLink="/registro">regístrate</a> para comentar.
+            </div>
+          }
+        </article>
+      }
+    </div>
+
+    <aside class="col-12 col-md-4">
+      <app-sidebar-foro />
+    </aside>
+  </div>
+</section>
+
+<app-confirmacion
+  [abierto]="porEliminar() !== null"
+  [titulo]="porEliminar()?.tipo === 'publicacion' ? '¿Eliminar la reseña?' : '¿Eliminar el comentario?'"
+  [mensaje]="porEliminar()?.tipo === 'publicacion' ? 'Se eliminarán también todos sus comentarios. Esta acción no se puede deshacer.' : 'Esta acción no se puede deshacer.'"
+  [procesando]="eliminando()"
+  (confirmar)="confirmarEliminacion()"
+  (cancelar)="porEliminar.set(null)" />

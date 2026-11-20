@@ -1,0 +1,5 @@
+.resena,
+.comentario {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
