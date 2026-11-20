@@ -1,0 +1,33 @@
+.barra {
+  background: var(--lyl-navbar);
+  padding-block: 0.6rem;
+}
+
+.marca {
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.05;
+}
+
+.buscador {
+  width: 100%;
+  max-width: 460px;
+}
+
+.buscador .form-control {
+  border-radius: 999px 0 0 999px;
+  padding-left: 1.1rem;
+}
+
+.buscador .btn {
+  border-radius: 0 999px 999px 0;
+}
+
+.nav-link.active {
+  box-shadow: inset 0 -2px 0 var(--lyl-acento);
+}
+
+.categorias {
+  max-height: 70vh;
+  overflow-y: auto;
+}

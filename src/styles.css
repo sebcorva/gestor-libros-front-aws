@@ -1,0 +1,111 @@
+/* ===== Libros y Letras: tema sobre Bootstrap 5.3 ===== */
+:root {
+  --lyl-navbar: #1e2833;
+  --lyl-fondo: #f0f2f5;
+  --lyl-primario: #2c6e91;
+  --lyl-primario-oscuro: #22566f;
+  --lyl-acento: #f2b01e;
+  --lyl-texto: #1f2933;
+  --lyl-texto-suave: #6b7785;
+  --lyl-borde: #e3e7ec;
+  --lyl-radio: 0.85rem;
+
+  --bs-body-bg: var(--lyl-fondo);
+  --bs-body-color: var(--lyl-texto);
+  --bs-primary: #2c6e91;
+  --bs-primary-rgb: 44, 110, 145;
+  --bs-link-color: var(--lyl-primario);
+  --bs-link-color-rgb: 44, 110, 145;
+  --bs-link-hover-color: var(--lyl-primario-oscuro);
+  --bs-border-radius: 0.6rem;
+  --bs-body-font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--lyl-primario);
+  --bs-btn-border-color: var(--lyl-primario);
+  --bs-btn-hover-bg: var(--lyl-primario-oscuro);
+  --bs-btn-hover-border-color: var(--lyl-primario-oscuro);
+  --bs-btn-active-bg: var(--lyl-primario-oscuro);
+  --bs-btn-active-border-color: var(--lyl-primario-oscuro);
+  --bs-btn-disabled-bg: var(--lyl-primario);
+  --bs-btn-disabled-border-color: var(--lyl-primario);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--lyl-primario);
+  --bs-btn-border-color: var(--lyl-primario);
+  --bs-btn-hover-bg: var(--lyl-primario);
+  --bs-btn-hover-border-color: var(--lyl-primario);
+  --bs-btn-active-bg: var(--lyl-primario-oscuro);
+}
+
+.btn-acento {
+  --bs-btn-bg: var(--lyl-acento);
+  --bs-btn-border-color: var(--lyl-acento);
+  --bs-btn-color: #1f2933;
+  --bs-btn-hover-bg: #d99a12;
+  --bs-btn-hover-border-color: #d99a12;
+  --bs-btn-hover-color: #1f2933;
+  --bs-btn-active-bg: #d99a12;
+}
+
+/* Tarjetas blancas con sombra suave, como el mockup */
+.tarjeta {
+  background: #fff;
+  border: 1px solid var(--lyl-borde);
+  border-radius: var(--lyl-radio);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06);
+}
+
+.texto-suave {
+  color: var(--lyl-texto-suave);
+}
+
+.titulo-seccion {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Chips de categorias (Generos populares) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: #eef1f5;
+  color: var(--lyl-texto);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.chip:hover {
+  background: #dfe6ee;
+  color: var(--lyl-texto);
+}
+
+/* Formularios centrados (login, registro, perfil, admin) */
+.pagina-formulario {
+  padding-block: 2.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Foco visible y accesible */
+.btn:focus-visible,
+.form-control:focus,
+.form-select:focus {
+  box-shadow: 0 0 0 0.2rem rgba(44, 110, 145, 0.25);
+}
