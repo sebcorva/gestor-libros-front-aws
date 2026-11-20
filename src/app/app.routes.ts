@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { invitadoGuard } from './core/guards';
+import { authGuard, invitadoGuard } from './core/guards';
 
 // MVC - Controlador: decide que vista se muestra segun la URL (protegida por guards)
 export const routes: Routes = [
@@ -15,5 +15,13 @@ export const routes: Routes = [
   {
     path: 'registro', title: 'Registro · Libros y Letras', canActivate: [invitadoGuard],
     loadComponent: () => import('./pages/auth/registro/registro.component').then(m => m.RegistroComponent),
+  },
+  {
+    path: 'perfil', title: 'Mi perfil · Libros y Letras', canActivate: [authGuard],
+    loadComponent: () => import('./pages/perfil/perfil/perfil.component').then(m => m.PerfilComponent),
+  },
+  {
+    path: 'premium', title: 'Hazte premium · Libros y Letras', canActivate: [authGuard],
+    loadComponent: () => import('./pages/perfil/premium/premium.component').then(m => m.PremiumComponent),
   },
 ];

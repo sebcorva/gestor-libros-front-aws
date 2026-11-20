@@ -1,0 +1,61 @@
+<section class="container pagina-formulario">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-7">
+      @if (comprobante(); as pago) {
+        <!-- Pago exitoso -->
+        <div class="tarjeta p-4 p-md-5 text-center">
+          <i class="bi bi-patch-check-fill text-success display-3"></i>
+          <h1 class="h3 fw-bold mt-3">¡Pago realizado con éxito!</h1>
+          <p class="texto-suave">Ya eres premium. Ahora puedes publicar reseñas.</p>
+          <dl class="row text-start bg-light rounded p-3 mx-0 my-4">
+            <dt class="col-6">N.º de comprobante</dt><dd class="col-6 text-end mb-1">#{{ pago.id }}</dd>
+            <dt class="col-6">Monto</dt><dd class="col-6 text-end mb-1">{{ pago.monto | currency: 'CLP' : 'symbol-narrow' : '1.0-0' }}</dd>
+            <dt class="col-6">Fecha</dt><dd class="col-6 text-end mb-0">{{ pago.fecha | date: 'dd/MM/yyyy HH:mm' }}</dd>
+          </dl>
+          <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+            <a routerLink="/publicaciones/nueva" class="btn btn-primary px-4"><i class="bi bi-pencil-square me-1"></i>Publicar mi primera reseña</a>
+            <a routerLink="/perfil" class="btn btn-outline-secondary px-4">Ver mi perfil</a>
+          </div>
+        </div>
+      } @else if (auth.usuario()?.premium) {
+        <div class="tarjeta p-4 p-md-5 text-center">
+          <i class="bi bi-star-fill text-warning display-4"></i>
+          <h1 class="h4 fw-bold mt-3">Ya eres premium</h1>
+          <p class="texto-suave">Puedes publicar y editar tus reseñas cuando quieras.</p>
+          <a routerLink="/publicaciones/nueva" class="btn btn-primary px-4">Publicar reseña</a>
+        </div>
+      } @else {
+        <div class="tarjeta p-4 p-md-5">
+          @if (motivo() === 'publicar') {
+            <div class="alert alert-info py-2" role="status">Para publicar reseñas necesitas una cuenta premium.</div>
+          }
+          <div class="row g-4 align-items-center">
+            <div class="col-12 col-md-7">
+              <h1 class="h3 fw-bold">Hazte premium</h1>
+              <ul class="list-unstyled mt-3 mb-0">
+                @for (b of beneficios; track b.texto) {
+                  <li class="mb-2"><i class="bi {{ b.icono }} text-primary me-2"></i>{{ b.texto }}</li>
+                }
+              </ul>
+            </div>
+            <div class="col-12 col-md-5">
+              <div class="border rounded-3 p-4 text-center">
+                <div class="texto-suave small">Pago único</div>
+                <div class="display-6 fw-bold">{{ precio | currency: 'CLP' : 'symbol-narrow' : '1.0-0' }}</div>
+                <div class="small texto-suave mb-3">CLP · sin renovación</div>
+                @if (error()) {
+                  <div class="alert alert-danger py-2 small" role="alert">{{ error() }}</div>
+                }
+                <button type="button" class="btn btn-acento w-100 py-2" (click)="confirmarPago()" [disabled]="procesando()">
+                  @if (procesando()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                  Confirmar pago
+                </button>
+                <p class="small texto-suave mt-3 mb-0"><i class="bi bi-info-circle me-1"></i>Pago simulado: no se solicitan datos de tarjeta.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

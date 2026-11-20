@@ -1,0 +1,114 @@
+<section class="container-xl py-4">
+  <h1 class="h3 fw-bold mb-4">Mi perfil</h1>
+
+  @if (cargando()) {
+    <div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando…</span></div></div>
+  } @else if (errorCarga()) {
+    <div class="alert alert-danger">{{ errorCarga() }}</div>
+  } @else if (usuario(); as u) {
+    <div class="row g-4">
+      <!-- Resumen -->
+      <div class="col-12 col-md-5 col-lg-4">
+        <div class="tarjeta p-4 text-center">
+          <app-avatar [nombre]="u.nombre + ' ' + u.apellido" [tamano]="88" />
+          <h2 class="h5 fw-bold mt-3 mb-0">{{ u.nombre }} {{ u.apellido }}</h2>
+          <p class="texto-suave mb-3">{{ u.email }}</p>
+          <div class="d-flex justify-content-center gap-2 flex-wrap mb-3">
+            <span class="badge" [class.text-bg-dark]="u.rol === 'ADMIN'" [class.text-bg-secondary]="u.rol !== 'ADMIN'">
+              <i class="bi bi-shield-lock me-1"></i>{{ u.rol === 'ADMIN' ? 'Administrador' : 'Lector' }}
+            </span>
+            @if (u.premium) {
+              <span class="badge text-bg-warning"><i class="bi bi-star-fill me-1"></i>Premium</span>
+            }
+          </div>
+          <p class="small texto-suave mb-0">Miembro desde {{ u.fechaRegistro | date: 'longDate' }}</p>
+          @if (!u.premium) {
+            <a routerLink="/premium" class="btn btn-acento w-100 mt-3"><i class="bi bi-star me-1"></i>Hazte premium y publica</a>
+          }
+        </div>
+
+        <div class="tarjeta p-4 mt-4">
+          <h2 class="titulo-seccion">Mis pagos</h2>
+          @for (pago of pagos(); track pago.id) {
+            <div class="d-flex justify-content-between small border-bottom py-2">
+              <span>Premium · {{ pago.fecha | date: 'dd/MM/yyyy' }}</span>
+              <strong>{{ pago.monto | currency: 'CLP' : 'symbol-narrow' : '1.0-0' }}</strong>
+            </div>
+          } @empty {
+            <p class="small texto-suave mb-0">Aún no tienes pagos.</p>
+          }
+        </div>
+      </div>
+
+      <!-- Formularios -->
+      <div class="col-12 col-md-7 col-lg-8">
+        <div class="tarjeta p-4">
+          <h2 class="titulo-seccion">Datos personales</h2>
+          @if (mensajeDatos(); as m) {
+            <div class="alert py-2" [class.alert-success]="m.tipo === 'success'" [class.alert-danger]="m.tipo === 'danger'" role="status">{{ m.texto }}</div>
+          }
+          <form [formGroup]="formDatos" (ngSubmit)="guardarDatos()" novalidate>
+            <div class="row g-3">
+              <div class="col-12 col-sm-6">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input id="nombre" class="form-control" formControlName="nombre"
+                       [class.is-invalid]="invalido(formDatos.controls.nombre, erroresDatos()['nombre'])" />
+                <app-error-campo [control]="formDatos.controls.nombre" [servidor]="erroresDatos()['nombre']" />
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input id="apellido" class="form-control" formControlName="apellido"
+                       [class.is-invalid]="invalido(formDatos.controls.apellido, erroresDatos()['apellido'])" />
+                <app-error-campo [control]="formDatos.controls.apellido" [servidor]="erroresDatos()['apellido']" />
+              </div>
+              <div class="col-12">
+                <label for="email" class="form-label">Email</label>
+                <input id="email" type="email" class="form-control" formControlName="email"
+                       [class.is-invalid]="invalido(formDatos.controls.email, erroresDatos()['email'])" />
+                <app-error-campo [control]="formDatos.controls.email" [servidor]="erroresDatos()['email']" />
+              </div>
+            </div>
+            <div class="text-end mt-3">
+              <button type="submit" class="btn btn-primary px-4" [disabled]="guardandoDatos() || formDatos.pristine">
+                @if (guardandoDatos()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                Guardar cambios
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="tarjeta p-4 mt-4">
+          <h2 class="titulo-seccion">Cambiar contraseña</h2>
+          @if (mensajePassword(); as m) {
+            <div class="alert py-2" [class.alert-success]="m.tipo === 'success'" [class.alert-danger]="m.tipo === 'danger'" role="status">{{ m.texto }}</div>
+          }
+          <form [formGroup]="formPassword" (ngSubmit)="cambiarPassword()" novalidate>
+            <div class="row g-3">
+              <div class="col-12 col-sm-6">
+                <label for="password" class="form-label">Nueva contraseña</label>
+                <input id="password" type="password" class="form-control" formControlName="password" autocomplete="new-password"
+                       [class.is-invalid]="invalido(formPassword.controls.password, erroresPassword()['password'])" />
+                <app-error-campo [control]="formPassword.controls.password" [servidor]="erroresPassword()['password']" />
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="confirmar" class="form-label">Confirmar contraseña</label>
+                <input id="confirmar" type="password" class="form-control" formControlName="confirmar" autocomplete="new-password"
+                       [class.is-invalid]="invalido(formPassword.controls.confirmar)" />
+                <app-error-campo [control]="formPassword.controls.confirmar" />
+              </div>
+              <div class="col-12">
+                <app-password-checklist [valor]="formPassword.controls.password.value" />
+              </div>
+            </div>
+            <div class="text-end mt-3">
+              <button type="submit" class="btn btn-outline-primary px-4" [disabled]="guardandoPassword()">
+                @if (guardandoPassword()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                Cambiar contraseña
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  }
+</section>
