@@ -9,6 +9,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent),
   },
   {
+    path: 'recuperar', title: 'Recuperar contraseña · Libros y Letras', canActivate: [invitadoGuard],
+    loadComponent: () => import('./pages/auth/recuperar/recuperar.component').then(m => m.RecuperarComponent),
+  },
+  {
     path: 'registro', title: 'Registro · Libros y Letras', canActivate: [invitadoGuard],
     loadComponent: () => import('./pages/auth/registro/registro.component').then(m => m.RegistroComponent),
   },

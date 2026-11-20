@@ -1,0 +1,91 @@
+<section class="container pagina-formulario">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-7 col-lg-5">
+      <div class="tarjeta p-4 p-md-5">
+        <h1 class="h3 fw-bold mb-1">Recuperar contraseña</h1>
+
+        <ol class="list-inline small texto-suave mb-4" aria-label="Pasos">
+          <li class="list-inline-item" [class.fw-bold]="paso() === 'email'" [class.text-primary]="paso() === 'email'">1. Tu email</li>
+          <li class="list-inline-item">›</li>
+          <li class="list-inline-item" [class.fw-bold]="paso() === 'codigo'" [class.text-primary]="paso() === 'codigo'">2. Código y nueva contraseña</li>
+        </ol>
+
+        @if (error()) {
+          <div class="alert alert-danger py-2" role="alert">{{ error() }}</div>
+        }
+
+        @switch (paso()) {
+          @case ('email') {
+            <p class="texto-suave">Ingresa el email de tu cuenta y te enviaremos un código de 6 dígitos.</p>
+            <form [formGroup]="formEmail" (ngSubmit)="solicitarCodigo()" novalidate>
+              <div class="mb-4">
+                <label for="email" class="form-label">Email</label>
+                <input id="email" type="email" class="form-control" formControlName="email" autocomplete="email"
+                       [class.is-invalid]="invalido(formEmail.controls.email)" />
+                <app-error-campo [control]="formEmail.controls.email" />
+              </div>
+              <button type="submit" class="btn btn-primary w-100 py-2" [disabled]="enviando()">
+                @if (enviando()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                Enviar código
+              </button>
+            </form>
+          }
+
+          @case ('codigo') {
+            <div class="alert alert-info py-2" role="status">
+              {{ respuesta()?.mensaje }}.
+              @if (respuesta()?.codigoDemo; as codigo) {
+                <div class="mt-2 small">
+                  <i class="bi bi-envelope-open me-1"></i><strong>Correo simulado (demo):</strong> tu código es
+                  <span class="badge text-bg-dark fs-6 font-monospace">{{ codigo }}</span>
+                  · vence en {{ respuesta()?.minutosVigencia }} min.
+                </div>
+              }
+            </div>
+            <form [formGroup]="formCodigo" (ngSubmit)="restablecer()" novalidate>
+              <div class="mb-3">
+                <label for="codigo" class="form-label">Código de 6 dígitos</label>
+                <input id="codigo" class="form-control font-monospace" formControlName="codigo" inputmode="numeric"
+                       maxlength="6" autocomplete="one-time-code"
+                       [class.is-invalid]="invalido(formCodigo.controls.codigo, erroresServidor()['codigo'])" />
+                <app-error-campo [control]="formCodigo.controls.codigo" [servidor]="erroresServidor()['codigo']"
+                                 mensajePatron="El código debe tener exactamente 6 dígitos" />
+              </div>
+              <div class="mb-3">
+                <label for="nuevaPassword" class="form-label">Nueva contraseña</label>
+                <input id="nuevaPassword" type="password" class="form-control" formControlName="nuevaPassword"
+                       autocomplete="new-password"
+                       [class.is-invalid]="invalido(formCodigo.controls.nuevaPassword, erroresServidor()['nuevaPassword'])" />
+                <app-error-campo [control]="formCodigo.controls.nuevaPassword" [servidor]="erroresServidor()['nuevaPassword']" />
+                <app-password-checklist [valor]="formCodigo.controls.nuevaPassword.value" />
+              </div>
+              <div class="mb-4">
+                <label for="confirmar" class="form-label">Confirmar contraseña</label>
+                <input id="confirmar" type="password" class="form-control" formControlName="confirmar"
+                       autocomplete="new-password" [class.is-invalid]="invalido(formCodigo.controls.confirmar)" />
+                <app-error-campo [control]="formCodigo.controls.confirmar" />
+              </div>
+              <button type="submit" class="btn btn-primary w-100 py-2" [disabled]="enviando()">
+                @if (enviando()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+                Cambiar contraseña
+              </button>
+              <button type="button" class="btn btn-link w-100 mt-2" (click)="volverAEmail()">Usar otro email o pedir un código nuevo</button>
+            </form>
+          }
+
+          @case ('listo') {
+            <div class="text-center py-3">
+              <i class="bi bi-check-circle-fill text-success display-4"></i>
+              <p class="mt-3 mb-4">Tu contraseña fue actualizada.</p>
+              <a class="btn btn-primary px-4" routerLink="/login" [queryParams]="{ restablecida: 1 }">Iniciar sesión</a>
+            </div>
+          }
+        }
+
+        @if (paso() !== 'listo') {
+          <p class="text-center mt-4 mb-0"><a routerLink="/login">Volver al inicio de sesión</a></p>
+        }
+      </div>
+    </div>
+  </div>
+</section>
