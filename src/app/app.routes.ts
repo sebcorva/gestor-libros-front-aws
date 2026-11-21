@@ -12,17 +12,19 @@ export const routes: Routes = [
     path: 'categoria/:genero', title: 'Categoría · Libros y Letras',
     loadComponent: () => import('./pages/foro/categoria/categoria.component').then(m => m.CategoriaComponent),
   },
-  // 'publicaciones/nueva' va antes que 'publicaciones/:id' para que "nueva" no se tome como id
+  // Las vistas de reseñas usan /resenas (no /publicaciones): /publicaciones es la ruta de la API y
+  // Nginx la envia al backend, asi que un F5 en /publicaciones/12 mostraria el JSON en vez de la app.
+  // 'resenas/nueva' va antes que 'resenas/:id' para que "nueva" no se tome como id
   {
-    path: 'publicaciones/nueva', title: 'Publicar reseña · Libros y Letras', canActivate: [publicarGuard],
+    path: 'resenas/nueva', title: 'Publicar reseña · Libros y Letras', canActivate: [publicarGuard],
     loadComponent: () => import('./pages/foro/publicacion-form/publicacion-form.component').then(m => m.PublicacionFormComponent),
   },
   {
-    path: 'publicaciones/:id/editar', title: 'Editar reseña · Libros y Letras', canActivate: [authGuard],
+    path: 'resenas/:id/editar', title: 'Editar reseña · Libros y Letras', canActivate: [authGuard],
     loadComponent: () => import('./pages/foro/publicacion-form/publicacion-form.component').then(m => m.PublicacionFormComponent),
   },
   {
-    path: 'publicaciones/:id', title: 'Reseña · Libros y Letras',
+    path: 'resenas/:id', title: 'Reseña · Libros y Letras',
     loadComponent: () => import('./pages/foro/publicacion-detalle/publicacion-detalle.component').then(m => m.PublicacionDetalleComponent),
   },
   {

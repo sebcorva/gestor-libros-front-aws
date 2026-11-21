@@ -29,7 +29,7 @@ describe('PublicacionFormComponent', () => {
       titulo: 'Fundación', autor: 'Isaac Asimov', anioPublicacionLibro: '1951', genero: 'CIENCIA_FICCION', resena: RESENA,
     });
     req.flush(publicacionPrueba({ idPublicacion: 4 }));
-    expect(router.navigate).toHaveBeenCalledWith(['/publicaciones', 4], expect.anything());
+    expect(router.navigate).toHaveBeenCalledWith(['/resenas', 4], expect.anything());
   });
 
   it('no envía una reseña corta ni un año futuro', async () => {
@@ -62,6 +62,6 @@ describe('PublicacionFormComponent', () => {
     fixture.componentRef.setInput('id', '1');
     await fixture.whenStable();
     http.expectOne('/publicaciones/1').flush(publicacionPrueba({ usuarioId: 7 }));
-    expect(router.navigate).toHaveBeenCalledWith(['/publicaciones', 1]);
+    expect(router.navigate).toHaveBeenCalledWith(['/resenas', 1]);
   });
 });

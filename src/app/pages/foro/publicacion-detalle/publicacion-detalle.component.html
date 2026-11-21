@@ -38,7 +38,7 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
                   @if (esAutor()) {
-                    <li><a class="dropdown-item" [routerLink]="['/publicaciones', p.idPublicacion, 'editar']"><i class="bi bi-pencil me-2"></i>Editar</a></li>
+                    <li><a class="dropdown-item" [routerLink]="['/resenas', p.idPublicacion, 'editar']"><i class="bi bi-pencil me-2"></i>Editar</a></li>
                   }
                   @if (puedeEliminar()) {
                     <li>

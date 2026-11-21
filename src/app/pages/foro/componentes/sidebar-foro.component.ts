@@ -31,7 +31,7 @@ import { TiempoRelativoPipe } from '../../../shared/tiempo-relativo.pipe';
         <div class="row row-cols-2 g-2">
           @for (p of destacados(); track p.idPublicacion) {
             <div class="col">
-              <a [routerLink]="['/publicaciones', p.idPublicacion]" [attr.aria-label]="p.titulo + ' de ' + p.autor">
+              <a [routerLink]="['/resenas', p.idPublicacion]" [attr.aria-label]="p.titulo + ' de ' + p.autor">
                 <app-portada [titulo]="p.titulo" [autor]="p.autor" [genero]="p.genero" [mini]="true" />
               </a>
             </div>
@@ -44,7 +44,7 @@ import { TiempoRelativoPipe } from '../../../shared/tiempo-relativo.pipe';
       <section class="tarjeta p-3 p-md-4" aria-labelledby="t-actividad">
         <h2 id="t-actividad" class="titulo-seccion">Actividad reciente</h2>
         @for (p of recientes(); track p.idPublicacion) {
-          <a [routerLink]="['/publicaciones', p.idPublicacion]" class="d-flex gap-2 mb-3 text-decoration-none text-reset">
+          <a [routerLink]="['/resenas', p.idPublicacion]" class="d-flex gap-2 mb-3 text-decoration-none text-reset">
             <app-avatar [nombre]="p.usuarioNombre" [tamano]="32" />
             <div class="small lh-sm">
               <strong>{{ p.usuarioNombre }}</strong>

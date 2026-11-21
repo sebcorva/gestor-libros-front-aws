@@ -15,7 +15,7 @@ import { TiempoRelativoPipe } from '../../../shared/tiempo-relativo.pipe';
   template: `
     <article class="tarjeta p-3 p-md-4">
       <h2 class="h5 fw-bold mb-3">
-        <a [routerLink]="['/publicaciones', p().idPublicacion]" class="link-dark text-decoration-none stretched-titulo">
+        <a [routerLink]="['/resenas', p().idPublicacion]" class="link-dark text-decoration-none stretched-titulo">
           Descubriendo “{{ p().titulo }}” de {{ p().autor }}
         </a>
       </h2>
@@ -32,9 +32,9 @@ import { TiempoRelativoPipe } from '../../../shared/tiempo-relativo.pipe';
             <i class="bi bi-three-dots fs-5"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" [routerLink]="['/publicaciones', p().idPublicacion]"><i class="bi bi-eye me-2"></i>Ver reseña</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/resenas', p().idPublicacion]"><i class="bi bi-eye me-2"></i>Ver reseña</a></li>
             @if (esAutor()) {
-              <li><a class="dropdown-item" [routerLink]="['/publicaciones', p().idPublicacion, 'editar']"><i class="bi bi-pencil me-2"></i>Editar</a></li>
+              <li><a class="dropdown-item" [routerLink]="['/resenas', p().idPublicacion, 'editar']"><i class="bi bi-pencil me-2"></i>Editar</a></li>
             }
             <li><a class="dropdown-item" [routerLink]="['/categoria', p().genero]"><i class="bi bi-tag me-2"></i>Más de {{ genero()?.nombre }}</a></li>
           </ul>
@@ -43,7 +43,7 @@ import { TiempoRelativoPipe } from '../../../shared/tiempo-relativo.pipe';
 
       <p class="extracto mb-3">{{ p().resena }}</p>
 
-      <a [routerLink]="['/publicaciones', p().idPublicacion]" class="d-block mb-3" tabindex="-1" aria-hidden="true">
+      <a [routerLink]="['/resenas', p().idPublicacion]" class="d-block mb-3" tabindex="-1" aria-hidden="true">
         <app-portada [titulo]="p().titulo" [autor]="p().autor" [genero]="p().genero" />
       </a>
 
@@ -52,7 +52,7 @@ import { TiempoRelativoPipe } from '../../../shared/tiempo-relativo.pipe';
           <i class="bi {{ genero()?.icono }} me-1"></i>{{ genero()?.nombre }}
         </a>
         <span class="texto-suave"><i class="bi bi-calendar3 me-1"></i>Publicado en {{ p().anioPublicacionLibro }}</span>
-        <a [routerLink]="['/publicaciones', p().idPublicacion]" class="ms-auto fw-semibold text-decoration-none">
+        <a [routerLink]="['/resenas', p().idPublicacion]" class="ms-auto fw-semibold text-decoration-none">
           Leer y comentar <i class="bi bi-arrow-right"></i>
         </a>
       </div>

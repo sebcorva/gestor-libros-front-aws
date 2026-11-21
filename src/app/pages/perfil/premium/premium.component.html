@@ -13,7 +13,7 @@
             <dt class="col-6">Fecha</dt><dd class="col-6 text-end mb-0">{{ pago.fecha | date: 'dd/MM/yyyy HH:mm' }}</dd>
           </dl>
           <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
-            <a routerLink="/publicaciones/nueva" class="btn btn-primary px-4"><i class="bi bi-pencil-square me-1"></i>Publicar mi primera reseña</a>
+            <a routerLink="/resenas/nueva" class="btn btn-primary px-4"><i class="bi bi-pencil-square me-1"></i>Publicar mi primera reseña</a>
             <a routerLink="/perfil" class="btn btn-outline-secondary px-4">Ver mi perfil</a>
           </div>
         </div>
@@ -22,7 +22,7 @@
           <i class="bi bi-star-fill text-warning display-4"></i>
           <h1 class="h4 fw-bold mt-3">Ya eres premium</h1>
           <p class="texto-suave">Puedes publicar y editar tus reseñas cuando quieras.</p>
-          <a routerLink="/publicaciones/nueva" class="btn btn-primary px-4">Publicar reseña</a>
+          <a routerLink="/resenas/nueva" class="btn btn-primary px-4">Publicar reseña</a>
         </div>
       } @else {
         <div class="tarjeta p-4 p-md-5">

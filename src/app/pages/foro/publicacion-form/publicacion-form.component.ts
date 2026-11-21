@@ -21,7 +21,7 @@ function anioNoFuturo(control: AbstractControl): ValidationErrors | null {
     : null;
 }
 
-// Crear (/publicaciones/nueva) y editar (/publicaciones/:id/editar) con el mismo formulario
+// Crear (/resenas/nueva) y editar (/resenas/:id/editar) con el mismo formulario
 @Component({
   selector: 'app-publicacion-form',
   imports: [ReactiveFormsModule, RouterLink, ErrorCampoComponent, PortadaComponent],
@@ -69,7 +69,7 @@ export class PublicacionFormComponent {
       next: p => {
         // Solo el autor puede editar (ni siquiera el ADMIN)
         if (p.usuarioId !== this.auth.usuario()?.id) {
-          this.router.navigate(['/publicaciones', id]);
+          this.router.navigate(['/resenas', id]);
           return;
         }
         this.form.reset({
@@ -103,7 +103,7 @@ export class PublicacionFormComponent {
     const id = this.id();
     const peticion = id ? this.publicacionService.actualizar(Number(id), datos) : this.publicacionService.crear(datos);
     peticion.subscribe({
-      next: p => this.router.navigate(['/publicaciones', p.idPublicacion], { queryParams: { editada: 1 } }),
+      next: p => this.router.navigate(['/resenas', p.idPublicacion], { queryParams: { editada: 1 } }),
       error: (err: unknown) => {
         this.guardando.set(false);
         this.erroresServidor.set(erroresPorCampo(err));

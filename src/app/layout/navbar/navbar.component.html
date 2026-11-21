@@ -57,7 +57,7 @@
               <li><h6 class="dropdown-header">{{ usuario.nombre }} {{ usuario.apellido }}</h6></li>
               <li><a class="dropdown-item" routerLink="/perfil"><i class="bi bi-person me-2"></i>Mi perfil</a></li>
               @if (auth.puedePublicar()) {
-                <li><a class="dropdown-item" routerLink="/publicaciones/nueva"><i class="bi bi-pencil-square me-2"></i>Publicar reseña</a></li>
+                <li><a class="dropdown-item" routerLink="/resenas/nueva"><i class="bi bi-pencil-square me-2"></i>Publicar reseña</a></li>
               }
               @if (!usuario.premium) {
                 <li><a class="dropdown-item" routerLink="/premium"><i class="bi bi-star me-2"></i>Hazte premium</a></li>
