@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 image="${1:?image URI is required}"
 region="${2:?AWS region is required}"
-if [[ ! "$image" =~ ^[0-9]{12}\.dkr\.ecr\.[a-z0-9-]+\.amazonaws\.com/pet-app-angular21:[0-9a-f]{40}$ ]]; then
+if [[ ! "$image" =~ ^[0-9]{12}\.dkr\.ecr\.[a-z0-9-]+\.amazonaws\.com/gestor-libros-front:[0-9a-f]{40}$ ]]; then
   echo "Invalid frontend ECR image URI." >&2
   exit 2
 fi
@@ -13,7 +13,7 @@ if [[ ! "$region" =~ ^[a-z0-9-]+$ ]]; then
 fi
 
 registry="${image%%/*}"
-docker_config="$(mktemp -d /tmp/pet-ecr-docker.XXXXXX)"
+docker_config="$(mktemp -d /tmp/libros-ecr-docker.XXXXXX)"
 export DOCKER_CONFIG="$docker_config"
 cleanup_auth() {
   if [[ -n "$docker_config" ]]; then
@@ -35,12 +35,12 @@ rollback() {
   status=$?
   trap - EXIT
   if (( status != 0 )); then
-    if [[ "$new_container_attempted" == true ]] && docker inspect pet-frontend >/dev/null 2>&1; then
-      docker rm -f pet-frontend >/dev/null
+    if [[ "$new_container_attempted" == true ]] && docker inspect libros-frontend >/dev/null 2>&1; then
+      docker rm -f libros-frontend >/dev/null
     fi
     if [[ -n "$backup" ]] && docker inspect "$backup" >/dev/null 2>&1; then
-      docker rename "$backup" pet-frontend
-      docker start pet-frontend
+      docker rename "$backup" libros-frontend
+      docker start libros-frontend
       echo "Frontend deployment failed; previous container restored." >&2
     fi
   fi
@@ -49,15 +49,15 @@ rollback() {
 }
 trap rollback EXIT
 
-if docker inspect pet-frontend >/dev/null 2>&1; then
-  backup="pet-frontend-rollback-$(date +%s%N)"
-  docker rename pet-frontend "$backup"
+if docker inspect libros-frontend >/dev/null 2>&1; then
+  backup="libros-frontend-rollback-$(date +%s%N)"
+  docker rename libros-frontend "$backup"
   docker stop "$backup" >/dev/null || true
 fi
 
 new_container_attempted=true
 docker run -d \
-  --name pet-frontend \
+  --name libros-frontend \
   --restart unless-stopped \
   --publish 127.0.0.1:4000:4000 \
   "$image" >/dev/null

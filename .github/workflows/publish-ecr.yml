@@ -1,3 +1,4 @@
+# Basado en .github/workflows/publish-ecr.yml de cvalverd/pet-app-angular21, adaptado al front de Libros y Letras.
 name: Publish and deploy frontend to EC2
 
 on:
@@ -10,7 +11,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: publish-ecr
+  group: publish-gestor-libros-front-ecr
   cancel-in-progress: false
 
 jobs:
@@ -22,7 +23,7 @@ jobs:
     env:
       AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
       EXPECTED_AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
-      ECR_REPOSITORY: pet-app-angular21
+      ECR_REPOSITORY: gestor-libros-front
 
     outputs:
       image: ${{ steps.image-reference.outputs.image }}

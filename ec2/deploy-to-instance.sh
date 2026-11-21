@@ -37,7 +37,7 @@ jq -n --arg command "$remote_command" '{commands: [$command]}' > "$parameters_fi
 command_id="$(aws ssm send-command \
   --instance-ids "$instance_id" \
   --document-name AWS-RunShellScript \
-  --comment "Deploy Pet application from GitHub Actions" \
+  --comment "Deploy Libros y Letras (front) from GitHub Actions" \
   --timeout-seconds 900 \
   --parameters "file://$parameters_file" \
   --region "$region" \
@@ -84,30 +84,21 @@ fi
 if [[ "$component" == frontend ]]; then
   curl --fail --silent --show-error --retry 12 --retry-all-errors --retry-delay 5 \
     --max-time 10 "http://${public_ip}/" --output /dev/null
+  # La app consume gestor-biblioteca por el mismo Nginx: GET /publicaciones es publico
   curl --fail --silent --show-error --retry 12 --retry-all-errors --retry-delay 5 \
-    --max-time 10 "http://${public_ip}/pets" --output "$RUNNER_TEMP/pets-response.json"
-  python3 - "$RUNNER_TEMP/pets-response.json" <<'PY'
+    --max-time 10 "http://${public_ip}/publicaciones" --output "$RUNNER_TEMP/publicaciones.json"
+  python3 - "$RUNNER_TEMP/publicaciones.json" <<'PY'
 import json
 import sys
 
 with open(sys.argv[1], encoding="utf-8") as response:
-    pets = json.load(response)
-if not isinstance(pets, list) or len(pets) < 4:
-    raise SystemExit("Public GET /pets did not return at least four demo records.")
-print(f"EC2 smoke tests passed: frontend HTTP 200; API HTTP 200 with {len(pets)} records.")
+    publicaciones = json.load(response)
+if not isinstance(publicaciones, list):
+    raise SystemExit("Public GET /publicaciones did not return a JSON array.")
+print(f"EC2 smoke tests passed: frontend HTTP 200; /publicaciones HTTP 200 with {len(publicaciones)} records.")
 PY
   echo "Website: http://${public_ip}/"
 else
-  curl --fail --silent --show-error --retry 12 --retry-all-errors --retry-delay 5 \
-    --max-time 10 "http://${public_ip}/pets" --output "$RUNNER_TEMP/pets-response.json"
-  python3 - "$RUNNER_TEMP/pets-response.json" <<'PY'
-import json
-import sys
-
-with open(sys.argv[1], encoding="utf-8") as response:
-    pets = json.load(response)
-if not isinstance(pets, list) or len(pets) < 4:
-    raise SystemExit("Public GET /pets did not return at least four demo records.")
-print(f"EC2 smoke test passed: API HTTP 200 with {len(pets)} records.")
-PY
+  echo "This repository only deploys the frontend component." >&2
+  exit 2
 fi
